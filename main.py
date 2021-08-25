@@ -5,11 +5,14 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from router import demo
+from communication.listener import listener
 from utils.logger import get_logger
 
 LOG = get_logger(__name__)
 
 app = FastAPI()
+
+listener(app)
 
 origins = [
     "http://localhost.tiangolo.com",
