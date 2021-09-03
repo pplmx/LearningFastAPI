@@ -6,7 +6,7 @@ name = "tsinghua"
 [packages]
 fastapi = "*"
 uvicorn = "*"
-socketio = "*"
+python-socketio = "*"
 
 [dev-packages]
 
