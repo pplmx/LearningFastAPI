@@ -7,6 +7,7 @@ name = "tsinghua"
 fastapi = "*"
 uvicorn = "*"
 python-socketio = "*"
+pydantic = "*"
 
 [dev-packages]
 
