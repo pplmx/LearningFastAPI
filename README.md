@@ -18,3 +18,8 @@ hypercorn main:app --bind 0.0.0.0:8000
 ```bash
 gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker
 ```
+
+## docker
+```shell
+make dev
+```

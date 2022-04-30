@@ -1,0 +1,7 @@
+version: Compose specification
+services:
+    app:
+        image: pplmx/fastapi_sample
+        ports:
+            - "8080:8080"
+        restart: always
