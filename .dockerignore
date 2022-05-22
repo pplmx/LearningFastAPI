@@ -5,6 +5,7 @@ Pipfile.lock
 docker-compose.yml
 README.md
 Makefile
+nginx
 
 ### VirtualEnv template
 # Virtualenv
