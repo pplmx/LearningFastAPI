@@ -1,16 +1,11 @@
 version: Compose specification
 services:
-    app:
+    fastapi:
         image: pplmx/fastapi_sample
-        ports:
-            - "8080:8080"
         restart: always
-    nginx:
-        image: nginx
-        ports:
-            - "80:80"
-            - "443:443"
-        restart: always
-        volumes:
-            - ./nginx/conf.d/:/etc/nginx/conf.d/
-            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        networks:
+            - traefik-net
+
+networks:
+    traefik-net:
+        external: true
