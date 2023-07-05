@@ -1,4 +1,4 @@
-anyio==3.5.0
+anyio==3.7.1
 asgiref==3.5.0
 bidict==0.22.0
 click==8.1.3
