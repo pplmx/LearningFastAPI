@@ -11,4 +11,4 @@ python-socketio==5.6.0
 sniffio==1.2.0
 starlette==0.20.4
 typing_extensions==4.2.0
-uvicorn==0.17.6
+uvicorn==0.23.1
