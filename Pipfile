@@ -1,7 +1,7 @@
 [[source]]
-url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+url = "https://mirrors.cernet.edu.cn/pypi/web/simple"
 verify_ssl = true
-name = "tsinghua"
+name = "MirrorZ"
 
 [packages]
 fastapi = "*"
@@ -11,4 +11,4 @@ python-socketio = "*"
 [dev-packages]
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"

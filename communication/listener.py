@@ -24,4 +24,3 @@ def listener(app: FastAPI):
     @sio.on('message')
     async def message(sid, data):
         LOG.info(f'{sid} {data}')
-

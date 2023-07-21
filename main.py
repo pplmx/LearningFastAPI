@@ -4,8 +4,8 @@ import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
-from router import demo
 from communication.listener import listener
+from router import demo
 from utils.logger import get_logger
 
 LOG = get_logger(__name__)
@@ -34,7 +34,7 @@ app.add_middleware(
 async def add_process_time_header(request: Request, call_next):
     start_time = time.time_ns()
     response = await call_next(request)
-    process_time = (time.time_ns() - start_time)/10e6
+    process_time = (time.time_ns() - start_time) / 10e6
     response.headers["X-Process-Time"] = str(process_time)
     LOG.debug(f'cost: {process_time}ms')
     return response

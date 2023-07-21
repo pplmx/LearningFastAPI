@@ -1,6 +1,7 @@
 # FastAPI Demo
 
 ## NGINX
+
 ```shell
 echo "127.0.0.1 fastapi.aurora.inf" >> /etc/hosts
 ```
@@ -22,14 +23,17 @@ gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker
 ```
 
 ### docker
+
 ```shell
 make dev
 ```
 
 ### k8s
+
 ```shell
 make prod
 ```
 
 ## ACCESS
+
 http://fastapi.aurora.inf/

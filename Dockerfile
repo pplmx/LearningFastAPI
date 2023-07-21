@@ -1,11 +1,11 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 LABEL maintainer="紫玄"
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PIP_NO_CACHE 1
-ENV PIP_INDEX_URL https://pypi.tuna.tsinghua.edu.cn/simple
+ENV PIP_INDEX_URL https://mirrors.cernet.edu.cn/pypi/web/simple
 
 WORKDIR /app
 
