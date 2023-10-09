@@ -2,7 +2,7 @@
 Dockerfile
 Pipfile
 Pipfile.lock
-docker-compose.yml
+compose.yml
 README.md
 Makefile
 nginx
@@ -135,7 +135,6 @@ celerybeat.pid
 
 # Environments
 .env
-.venv
 env/
 venv/
 ENV/
