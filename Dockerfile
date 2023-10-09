@@ -12,8 +12,7 @@ WORKDIR /app
 # As this file doesn't change often
 # Docker will detect it and use the cache for this step, enabling the cache for the next step too.
 COPY requirements.txt .
-RUN pip install -r requirements.txt && \
-    pip install uvicorn gunicorn
+RUN pip install -r requirements.txt
 
 COPY . .
 
