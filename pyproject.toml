@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "LearningFastAPI"
+version = "0.1.0"
+description = ""
+authors = ["Mystic"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+uvicorn = {extras = ["standard"], version = "^0.23.2"}
+gunicorn = "^21.2.0"
+fastapi = "^0.103.2"
+python-socketio = "^5.9.0"
+
+
+[[tool.poetry.source]]
+name = "MirrorZ"
+url = "https://mirrors.cernet.edu.cn/pypi/web/simple/"
+priority = "default"
+
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
