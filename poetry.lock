@@ -415,13 +415,13 @@ reference = "MirrorZ"
 
 [[package]]
 name = "python-engineio"
-version = "4.7.1"
+version = "4.8.0"
 description = "Engine.IO server and client for Python"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "python-engineio-4.7.1.tar.gz", hash = "sha256:a8422e345cd9a21451303380b160742ff02197975b1c3a02cef115febe2b1b20"},
-    {file = "python_engineio-4.7.1-py3-none-any.whl", hash = "sha256:52499e8ab94fea1a6525ffe872fe7028d04b575799c5fa8e2cf7880e032de42e"},
+    {file = "python-engineio-4.8.0.tar.gz", hash = "sha256:2a32585d8fecd0118264fe0c39788670456ca9aa466d7c026d995cfff68af164"},
+    {file = "python_engineio-4.8.0-py3-none-any.whl", hash = "sha256:6055ce35b7f32b70641d53846faf76e06f2af0107a714cedb2750595c69ade43"},
 ]
 
 [package.dependencies]
@@ -439,18 +439,18 @@ reference = "MirrorZ"
 
 [[package]]
 name = "python-socketio"
-version = "5.9.0"
+version = "5.10.0"
 description = "Socket.IO server and client for Python"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "python-socketio-5.9.0.tar.gz", hash = "sha256:dc42735f65534187f381fde291ebf620216a4960001370f32de940229b2e7f8f"},
-    {file = "python_socketio-5.9.0-py3-none-any.whl", hash = "sha256:c20f12e4ed0cba57581af26bbeea9998bc2eeebb3b952fa92493a1e051cfe9dc"},
+    {file = "python-socketio-5.10.0.tar.gz", hash = "sha256:01c616946fa9f67ed5cc3d1568e1c4940acfc64aeeb9ff621a53e80cabeb748a"},
+    {file = "python_socketio-5.10.0-py3-none-any.whl", hash = "sha256:fb18d9b84cfb05289dc207b790c3de59cd242310d9b980b1c31e9faf4f79101a"},
 ]
 
 [package.dependencies]
 bidict = ">=0.21.0"
-python-engineio = ">=4.7.0"
+python-engineio = ">=4.8.0"
 
 [package.extras]
 asyncio-client = ["aiohttp (>=3.4)"]
