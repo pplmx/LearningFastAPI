@@ -5,7 +5,8 @@ LABEL maintainer="Mystic"
 ENV PIP_NO_CACHE_DIR 1
 ENV PIP_INDEX_URL https://mirrors.cernet.edu.cn/pypi/web/simple
 # poetry will be installed in $HOME/.local/bin
-ENV PATH "$HOME/.local/bin:$PATH"
+# NOT WORK, call PATH in RUN command directly, like this: RUN PATH="${HOME}/.local/bin:${PATH}" poetry install --no-directory
+# ENV PATH "$HOME/.local/bin:$PATH"
 
 WORKDIR /app
 
@@ -15,10 +16,10 @@ COPY pyproject.toml .
 RUN python -m venv --copies venv
 RUN . venv/bin/activate && \
     python -m ensurepip -U && \
-    poetry install --no-directory
+    PATH="${HOME}/.local/bin:${PATH}" poetry install --no-directory
 
 
-FROM python:3.12-alpine
+FROM python:3.12-slim-bookworm
 
 WORKDIR /app
 COPY --from=builder /app/venv /app/venv

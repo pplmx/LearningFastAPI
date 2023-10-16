@@ -37,8 +37,8 @@ async def read_user_item(
 ):
     """
         read users items
-    :param user_id: Path Parameter
-    :param item_id: Path Parameter
+    :param user_id: Path Parameter user_id
+    :param item_id: Path Parameter item_id
     :param needy: required Query Parameter
     :param q: optional Query Parameter
     :param short: optional Query Parameter
@@ -77,7 +77,7 @@ async def create_item1(item: Item):
     :param item:
     :return:
     """
-    item_dict = item.dict()
+    item_dict = item.model_dump()
     if item.tax:
         price_with_tax = item.price + item.tax
         item_dict.update({"price_with_tax": price_with_tax})
@@ -93,7 +93,7 @@ async def create_item2(item_id: int, item: Item, q: Optional[str] = None):
     :param q:
     :return:
     """
-    result = {"item_id": item_id, **item.dict()}
+    result = {"item_id": item_id, **item.model_dump()}
     if q:
         result.update({"q": q})
     return result

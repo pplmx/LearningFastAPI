@@ -1,11 +1,5 @@
 # FastAPI Demo
 
-## NGINX
-
-```shell
-echo "127.0.0.1 fastapi.aurora.inf" >> /etc/hosts
-```
-
 ## STARTER
 
 ```bash
@@ -36,4 +30,4 @@ make prod
 
 ## ACCESS
 
-http://fastapi.aurora.inf/
+http://localhost:8080

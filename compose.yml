@@ -3,9 +3,20 @@ services:
     fastapi:
         image: pplmx/fastapi_sample
         restart: always
+        ports:
+            - 8080:8080
         networks:
             - traefik-net
 
+# Use external network
+#networks:
+#    traefik-net:
+#        external: true
+
+# Create new network
 networks:
     traefik-net:
-        external: true
+        name: traefik-net
+        ipam:
+            config:
+                -   subnet: 172.16.155.0/24

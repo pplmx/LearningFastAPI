@@ -5,27 +5,37 @@ IMAGE_NAME="pplmx/fastapi_sample"
 COMPOSE_SERVICE_NAME="demo"
 K8S_APP="k8s/app.yml"
 
+# Build image
 image:
-	docker image build -t ${IMAGE_NAME} .
+	@docker image build -t ${IMAGE_NAME} .
 
+# Start services
 start:
-	docker compose -p ${COMPOSE_SERVICE_NAME} up -d
+	@docker compose -p ${COMPOSE_SERVICE_NAME} up -d
 
-restart:
-	docker compose -p ${COMPOSE_SERVICE_NAME} down
-	docker compose -p ${COMPOSE_SERVICE_NAME} up -d
+# Stop services
+stop:
+	@docker compose -p ${COMPOSE_SERVICE_NAME} down
 
+# Restart services
+restart: stop start
+
+# Deploy to k8s
 k:
 	kubectl apply -f ${K8S_APP}
 
+# Run dev server
 dev: image restart
 
+# Run prod server
 prod: image k
 
+# Export requirements
 export:
 	@poetry lock --no-update
 	@poetry export -f requirements.txt --output requirements.txt --without-hashes
 
+# Clean up
 clean:
 	@docker compose -p ${COMPOSE_SERVICE_NAME} down
 	@kubectl delete -f ${K8S_APP} 2> /dev/null || echo "No k8s resource found"
