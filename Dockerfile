@@ -33,4 +33,7 @@ COPY . .
 
 EXPOSE 8080
 
+# healthcheck with python urllib
+HEALTHCHECK --interval=5s --timeout=3s --retries=3 CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8080').getcode()"
+
 CMD ["gunicorn", "main:app"]
