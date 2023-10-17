@@ -10,7 +10,8 @@ ENV PIP_INDEX_URL https://mirrors.cernet.edu.cn/pypi/web/simple
 
 WORKDIR /app
 
-RUN curl -sSL https://install.python-poetry.org | python -
+# Use curl to download and install poetry, avoid executing scripts from a pipe for increased security
+RUN curl -sSL https://install.python-poetry.org -o get-poetry.py && python get-poetry.py && rm -fr get-poetry.py
 
 COPY pyproject.toml .
 RUN python -m venv --copies venv
