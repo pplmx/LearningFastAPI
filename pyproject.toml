@@ -7,10 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-uvicorn = {extras = ["standard"], version = "^0.23.2"}
+uvicorn = { extras = ["standard"], version = "^0.23.2" }
 gunicorn = "^21.2.0"
 fastapi = "^0.103.2"
 python-socketio = "^5.9.0"
+sqlmodel = "^0.0.8"
 
 
 [[tool.poetry.source]]
@@ -18,10 +19,6 @@ name = "MirrorZ"
 url = "https://mirrors.cernet.edu.cn/pypi/web/simple/"
 priority = "default"
 
-
-[[tool.poetry.source]]
-name = "PyPI"
-priority = "primary"
 
 [build-system]
 requires = ["poetry-core"]

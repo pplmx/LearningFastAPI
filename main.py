@@ -1,46 +1,28 @@
-import time
-
 import uvicorn
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from communication.listener import listener
-from router import demo
-from utils.logger import get_logger
-
-LOG = get_logger(__name__)
+from db.base import create_db_and_tables, create_users
+from router.user_router import router as user_router
 
 app = FastAPI()
 
-listener(app)
-
-origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost",
-    "http://localhost:8080",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-@app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
-    start_time = time.time_ns()
-    response = await call_next(request)
-    process_time = (time.time_ns() - start_time) / 10e6
-    response.headers["X-Process-Time"] = str(process_time)
-    LOG.debug(f'cost: {process_time}ms')
-    return response
+@app.on_event("startup")
+async def on_startup():
+    create_db_and_tables()
+    create_users()
 
 
-app.include_router(demo.router)
+app.include_router(user_router, prefix="/api", tags=["users"])
 
 if __name__ == '__main__':
-    uvicorn.run('main:app', host='127.0.0.1', port=8000, reload=True)
+    uvicorn.run('main:app', host='127.0.0.1', port=8080, reload=True)
