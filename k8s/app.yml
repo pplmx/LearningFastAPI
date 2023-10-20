@@ -1,35 +1,66 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: fastapi-sample
+    name: fastapi-sample  # 部署的名称
     labels:
-        app: fastapi-sample
+        app: fastapi-sample  # 标签，用于选择器
 spec:
-    replicas: 1
+    replicas: 3  # 副本数量，增加副本数量以提高可用性
     selector:
         matchLabels:
-            app: fastapi-sample
+            app: fastapi-sample  # 选择器，用于匹配Pod
     template:
         metadata:
             labels:
-                app: fastapi-sample
+                app: fastapi-sample  # Pod的标签
         spec:
             containers:
-                -   name: fastapi-sample
-                    image: pplmx/fastapi_sample
+                -   name: fastapi-sample  # 容器名称
+                    image: pplmx/fastapi_sample  # 容器镜像
                     ports:
-                        -   containerPort: 8080
-                    imagePullPolicy: Always
+                        -   containerPort: 8080  # 容器端口
+                    imagePullPolicy: IfNotPresent  # 如果镜像已经存在，就不需要总是拉取
+                    livenessProbe: # liveness探针，用于检查容器是否还在运行
+                        httpGet:
+                            path: /healthz
+                            port: 8080
+                    readinessProbe: # readiness探针，用于检查容器是否准备好处理请求
+                        httpGet:
+                            path: /ready
+                            port: 8080
+                    securityContext: # 安全上下文，用于限制容器的权限
+                        runAsNonRoot: true
+                        runAsUser: 1000
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-    name: fastapi-sample-svc
+    name: fastapi-sample-svc  # 服务名称
 spec:
     selector:
-        app: fastapi-sample
+        app: fastapi-sample  # 选择器，用于匹配Pod
     ports:
-        -   port: 18888
-            targetPort: 8080
-    type: LoadBalancer
+        -   port: 18888  # 服务端口
+            targetPort: 8080  # 目标端口，即Pod的端口
+    type: LoadBalancer  # 类型为LoadBalancer，会自动创建云提供商的负载均衡器
+
+---
+apiVersion: autoscaling/v2  # 添加自动缩放以处理负载变化
+kind: HorizontalPodAutoscaler
+metadata:
+    name: fastapi-sample-hpa  # 自动缩放器的名称
+spec:
+    scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: fastapi-sample  # 需要缩放的目标，即上面定义的Deployment
+    minReplicas: 3  # 最小副本数量
+    maxReplicas: 10  # 最大副本数量，根据需要，可以增加最大副本数
+    metrics:
+        -   type: Resource
+            resource:
+                name: cpu
+                target:
+                    type: Utilization
+                    averageUtilization: 50  # 当CPU利用率超过50%时，增加副本数量

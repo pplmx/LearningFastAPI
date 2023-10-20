@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: fastapi-sample
+    labels:
+        app: fastapi-sample
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: fastapi-sample
+    template:
+        metadata:
+            labels:
+                app: fastapi-sample
+        spec:
+            containers:
+                -   name: fastapi-sample
+                    image: pplmx/fastapi_sample
+                    ports:
+                        -   containerPort: 8080
+                    imagePullPolicy: IfNotPresent
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: fastapi-sample-svc
+spec:
+    selector:
+        app: fastapi-sample
+    ports:
+        -   port: 18888
+            targetPort: 8080
+    type: LoadBalancer

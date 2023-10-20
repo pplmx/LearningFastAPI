@@ -37,11 +37,9 @@ export:
 
 # Clean up
 clean:
-	@docker compose -p ${COMPOSE_SERVICE_NAME} down
+	@docker compose -p ${COMPOSE_SERVICE_NAME} down -v
 	@kubectl delete -f ${K8S_APP} 2> /dev/null || echo "No k8s resource found"
 	@docker container prune -f
-	@docker image rm -f ${IMAGE_NAME}
-	@docker image prune -f
 
 # Show help
 help:
