@@ -18,8 +18,12 @@ httpx = "^0.25.0"
 uvicorn = { extras = ["standard"], version = "^0.23.2" }
 gunicorn = "^21.2.0"
 
-
 [[tool.poetry.source]]
 name = "MirrorZ"
 url = "https://mirrors.cernet.edu.cn/pypi/web/simple/"
 priority = "default"
+
+
+[tool.pytest.ini_options]
+pythonpath = ["src/app"]
+testpaths = ["tests"]

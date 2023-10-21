@@ -2,8 +2,9 @@
 Dockerfile
 compose.yml
 README.md
-*.db
+**/__pycache__/
 Makefile
+*.db
 .*
 
 ### VirtualEnv template
