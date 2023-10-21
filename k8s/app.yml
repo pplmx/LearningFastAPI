@@ -28,9 +28,6 @@ spec:
                         httpGet:
                             path: /ready # 服务提供的准备就绪接口
                             port: 8080
-                    securityContext: # 安全上下文，用于限制容器的权限
-                        runAsNonRoot: true
-                        runAsUser: 1000
 
 ---
 apiVersion: v1

@@ -1,9 +1,8 @@
-from fastapi import APIRouter, HTTPException
-from sqlmodel import Session
-
 from db.base import engine
+from fastapi import APIRouter, HTTPException
 from model.user import User
 from service import user_service
+from sqlmodel import Session
 
 router = APIRouter()
 

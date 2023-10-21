@@ -22,6 +22,13 @@ RUN . venv/bin/activate && \
 
 FROM python:3.12-slim-bookworm
 
+## Create a group and user
+## RUN groupadd -g 999 appgroup && useradd -r -u 999 -g appgroup appuser
+#RUN groupadd appgroup && useradd -r -g appgroup appuser
+#
+## Tell docker that all future commands should run as the appuser user
+#USER appuser
+
 WORKDIR /app
 COPY --from=builder /app/venv /app/venv
 
@@ -30,7 +37,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PATH /app/venv/bin:$PATH
 
-COPY . .
+COPY src/app /app
+COPY gunicorn.conf.py /app
 
 EXPOSE 8080
 

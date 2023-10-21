@@ -26,7 +26,7 @@ k:
 
 # Destroy k8s deployment
 uk:
-	@kubectl delete -f ${K8S_APP}
+	@kubectl delete -f ${K8S_APP} 2> /dev/null || echo "No k8s resource needed to be deleted"
 
 # Run dev server
 dev: image restart
@@ -42,7 +42,7 @@ export:
 # Clean up
 clean:
 	@docker compose -p ${COMPOSE_SERVICE_NAME} down -v
-	@kubectl delete -f ${K8S_APP} 2> /dev/null || echo "No k8s resource found"
+	@kubectl delete -f ${K8S_APP} 2> /dev/null || echo "No k8s resource found needed to be deleted"
 	@docker container prune -f
 
 # Show help

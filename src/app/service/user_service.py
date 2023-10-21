@@ -1,7 +1,6 @@
-from sqlmodel import Session, select
-
 from db.base import engine
 from model.user import User
+from sqlmodel import Session, select
 
 
 def create_user(user: User):
