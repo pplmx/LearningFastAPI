@@ -32,7 +32,7 @@ uk:
 dev: image restart
 
 # Run prod server
-prod: image k
+prod: image uk k
 
 # Export requirements
 export:
