@@ -22,11 +22,11 @@ spec:
                     imagePullPolicy: IfNotPresent  # 如果镜像已经存在，就不需要总是拉取
                     livenessProbe: # liveness探针，用于检查容器是否还在运行
                         httpGet:
-                            path: /healthz
+                            path: /healthz # 服务提供的健康检查接口
                             port: 8080
                     readinessProbe: # readiness探针，用于检查容器是否准备好处理请求
                         httpGet:
-                            path: /ready
+                            path: /ready # 服务提供的准备就绪接口
                             port: 8080
                     securityContext: # 安全上下文，用于限制容器的权限
                         runAsNonRoot: true
