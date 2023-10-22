@@ -1,3 +1,7 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "LearningFastAPI"
 version = "0.1.0"
@@ -19,8 +23,3 @@ gunicorn = "^21.2.0"
 name = "MirrorZ"
 url = "https://mirrors.cernet.edu.cn/pypi/web/simple/"
 priority = "default"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
