@@ -1,7 +1,7 @@
 name: Image Builder
 
 on:
-    # Allows run manually
+    # Allows running manually
     workflow_dispatch:
     push:
         branches:
@@ -10,7 +10,7 @@ on:
             - "v*.*.*" # match v1.0.0, v2.0.0, v1.0.0-alpha, v1.0.0-alpha.1, v2.0.0-rc.1+build.1, etc.
     pull_request:
         branches:
-            - "main" # if pr to main branch
+            - "main" # if pr to the main branch
 
 jobs:
     docker:
@@ -34,6 +34,7 @@ jobs:
                         type=semver,pattern={{version}}
                         type=semver,pattern={{major}}.{{minor}}
                         type=semver,pattern={{major}}
+                        type=sha
             -   name: Set up QEMU
                 uses: docker/setup-qemu-action@v3
             -   name: Set up Docker Buildx

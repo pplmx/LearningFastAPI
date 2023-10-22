@@ -22,7 +22,11 @@ restart: stop start
 
 # Deploy to k8s
 k:
-	kubectl apply -f ${K8S_APP}
+	@kubectl apply -f ${K8S_APP}
+
+# Destroy k8s deployment
+uk:
+	@kubectl delete -f ${K8S_APP}
 
 # Run dev server
 dev: image restart
