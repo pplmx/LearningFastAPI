@@ -1,11 +1,10 @@
 ### User Custom
 Dockerfile
-Pipfile
-Pipfile.lock
 compose.yml
 README.md
+*.db
 Makefile
-nginx
+.*
 
 ### VirtualEnv template
 # Virtualenv
