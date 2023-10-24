@@ -13,7 +13,7 @@ services:
 #    traefik-net:
 #        external: true
 
-# Create new network
+# Create a new network
 networks:
     traefik-net:
         name: traefik-net

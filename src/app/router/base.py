@@ -3,9 +3,9 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-# add healthz and ready endpoints
-@router.get("/healthz")
-async def healthz():
+# add livez and ready endpoints
+@router.get("/livez")
+async def livez():
     return {"status": "ok"}
 
 
