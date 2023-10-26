@@ -17,6 +17,8 @@ pytest = "^7.4.2"
 httpx = "^0.25.0"
 uvicorn = { extras = ["standard"], version = "^0.23.2" }
 gunicorn = "^21.2.0"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 
 [[tool.poetry.source]]
 name = "MirrorZ"

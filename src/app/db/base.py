@@ -7,6 +7,20 @@ sqlite_url = f"sqlite:///{sqlite_file_name}"
 engine = create_engine(sqlite_url, echo=True)
 
 
+def create_db():
+    create_db_and_tables()
+    create_users()
+
+
+def recreate_db():
+    drop_all()
+    create_db()
+
+
+def drop_all():
+    SQLModel.metadata.drop_all(engine)
+
+
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
 
@@ -24,3 +38,9 @@ def create_users():
 
         session.add_all([user_0, user_1, user_2, user_3])
         session.commit()
+
+
+def get_user_by_email(email: str):
+    with Session(engine) as session:
+        user = session.query(User).filter(User.email == email).first()
+        return user
