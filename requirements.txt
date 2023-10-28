@@ -1,6 +1,6 @@
 --index-url https://mirrors.cernet.edu.cn/pypi/web/simple
 
-anyio==3.7.1 ; python_version >= "3.12" and python_version < "4.0"
+anyio==4.0.0 ; python_version >= "3.12" and python_version < "4.0"
 bcrypt==4.0.1 ; python_version >= "3.12" and python_version < "4.0"
 certifi==2023.7.22 ; python_version >= "3.12" and python_version < "4.0"
 cffi==1.16.0 ; python_version >= "3.12" and python_version < "4.0"
