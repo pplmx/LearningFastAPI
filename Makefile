@@ -34,6 +34,10 @@ dev: image restart
 # Run prod server
 prod: image uk k
 
+# Test app
+test:
+	@poetry run pytest
+
 # Export requirements
 export:
 	@poetry lock --no-update
