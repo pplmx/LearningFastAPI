@@ -3,12 +3,12 @@ kind: Deployment
 metadata:
     name: fastapi-sample  # 部署的名称
     labels:
-        app: fastapi-sample  # 标签，用于选择器
+        app: fastapi-sample  # 标签, 用于选择器
 spec:
-    replicas: 3  # 副本数量，增加副本数量以提高可用性
+    replicas: 3  # 副本数量, 增加副本数量以提高可用性
     selector:
         matchLabels:
-            app: fastapi-sample  # 选择器，用于匹配Pod
+            app: fastapi-sample  # 选择器, 用于匹配Pod
     template:
         metadata:
             labels:
@@ -19,22 +19,22 @@ spec:
                     image: pplmx/fastapi_sample  # 容器镜像
                     ports:
                         -   containerPort: 8080  # 容器端口
-                    imagePullPolicy: IfNotPresent  # 如果镜像已经存在，就不需要总是拉取
-                    livenessProbe: # liveness探针，用于检查容器是否还在运行
+                    imagePullPolicy: IfNotPresent  # 如果镜像已经存在, 就不需要总是拉取
+                    livenessProbe: # liveness探针, 用于检查容器是否还在运行
                         httpGet:
                             path: /livez # 服务提供的健康检查接口
                             port: 8080
-                    readinessProbe: # readiness探针，用于检查容器是否准备好处理请求
+                    readinessProbe: # readiness探针, 用于检查容器是否准备好处理请求
                         httpGet:
                             path: /ready # 服务提供的准备就绪接口
                             port: 8080
-                    resources: # 添加资源限制，防止资源耗尽
+                    resources: # 添加资源限制, 防止资源耗尽
                         limits:
                             cpu: "1"
                             memory: "500Mi"
                         requests:
                             cpu: "0.5"
-                            memory: "200Mi"
+                            memory: "300Mi"
     strategy: # 添加更新策略
         type: RollingUpdate
         rollingUpdate:
@@ -48,11 +48,11 @@ metadata:
     name: fastapi-sample-svc  # 服务名称
 spec:
     selector:
-        app: fastapi-sample  # 选择器，用于匹配Pod
+        app: fastapi-sample  # 选择器, 用于匹配Pod
     ports:
         -   port: 18888  # 服务端口
-            targetPort: 8080  # 目标端口，即Pod的端口
-    type: LoadBalancer  # 类型为LoadBalancer，会自动创建云提供商的负载均衡器
+            targetPort: 8080  # 目标端口, 即Pod的端口
+    type: LoadBalancer  # 类型为LoadBalancer, 会自动创建云提供商的负载均衡器
 
 ---
 apiVersion: autoscaling/v2  # 添加自动缩放以处理负载变化
@@ -63,19 +63,19 @@ spec:
     scaleTargetRef:
         apiVersion: apps/v1
         kind: Deployment
-        name: fastapi-sample  # 需要缩放的目标，即上面定义的Deployment
+        name: fastapi-sample  # 需要缩放的目标, 即上面定义的Deployment
     minReplicas: 3  # 最小副本数量
-    maxReplicas: 10  # 最大副本数量，根据需要，可以增加最大副本数
+    maxReplicas: 10  # 最大副本数量, 根据需要, 可以增加最大副本数
     metrics:
         -   type: Resource
             resource:
                 name: cpu
                 target:
                     type: Utilization
-                    averageUtilization: 50  # 当CPU利用率超过50%时，增加副本数量
+                    averageUtilization: 85  # CPU利用率超过85%时, 自动扩容
         -   type: Resource
             resource:
-                name: memory # 添加内存使用率指标
+                name: memory
                 target:
                     type: Utilization
-                    averageUtilization: 50
+                    averageUtilization: 85 # 内存使用率超过85%时, 自动扩容

@@ -66,7 +66,7 @@ spec:
                             memory: "500Mi"
                         requests:
                             cpu: "0.5"
-                            memory: "200Mi"
+                            memory: "300Mi"
             volumes:   # 在Pod级别定义卷,可以被Pod中的所有容器使用
                 - name: data-volume
                   persistentVolumeClaim:
@@ -108,10 +108,10 @@ spec:
                 name: cpu
                 target:
                     type: Utilization
-                    averageUtilization: 50  # 当CPU利用率超过50%时, 增加副本数量
+                    averageUtilization: 85  # CPU利用率超过85%时, 自动扩容
         -   type: Resource
             resource:
-                name: memory # 添加内存使用率指标
+                name: memory
                 target:
                     type: Utilization
-                    averageUtilization: 50
+                    averageUtilization: 85 # 内存使用率超过85%时, 自动扩容
