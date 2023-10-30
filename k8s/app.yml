@@ -60,13 +60,6 @@ spec:
                     volumeMounts:  # 挂载卷到容器中的路径上
                         - name: data-volume
                           mountPath: /data
-                    resources: # 添加资源限制,防止资源耗尽
-                        limits:
-                            cpu: "1"
-                            memory: "500Mi"
-                        requests:
-                            cpu: "0.5"
-                            memory: "300Mi"
             volumes:   # 在Pod级别定义卷,可以被Pod中的所有容器使用
                 - name: data-volume
                   persistentVolumeClaim:
