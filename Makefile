@@ -34,6 +34,11 @@ dev: image restart
 # Run prod server
 prod: image uk k
 
+# format and lint
+ruff:
+	@ruff format src tests
+	@ruff check --fix src tests
+
 # Test app
 test:
 	@poetry run pytest

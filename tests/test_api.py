@@ -25,7 +25,7 @@ def test_get_users():
 
 def test_get_user_id():
     usr = _create_user()
-    response = client.get(f'/api/users/{usr.id}')
+    response = client.get(f"/api/users/{usr.id}")
     assert response.status_code == 200
     assert response.json() == {
         "id": usr.id,
@@ -38,7 +38,7 @@ def test_get_user_id():
 def test_update_user():
     usr = _create_user()
     response = client.put(
-        f'/api/users/{usr.id}',
+        f"/api/users/{usr.id}",
         json={
             "name": "test_update_user" + str(random.randint(1, 100000)),
             "email": "test_update_user" + str(random.randint(1, 100000)) + "@x.io",
