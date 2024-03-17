@@ -39,6 +39,14 @@ ruff:
 	@ruff format src tests
 	@ruff check --fix src tests
 
+# list packages with tree
+lt:
+	@poetry show -t
+
+# list latest packages
+ll:
+	@poetry show -l
+
 # Test app
 test:
 	@poetry run pytest
