@@ -984,13 +984,13 @@ reference = "MirrorZ"
 
 [[package]]
 name = "uvicorn"
-version = "0.28.0"
+version = "0.32.0"
 description = "The lightning-fast ASGI server."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "uvicorn-0.28.0-py3-none-any.whl", hash = "sha256:6623abbbe6176204a4226e67607b4d52cc60ff62cda0ff177613645cefa2ece1"},
-    {file = "uvicorn-0.28.0.tar.gz", hash = "sha256:cab4473b5d1eaeb5a0f6375ac4bc85007ffc75c3cc1768816d9e5d589857b067"},
+    {file = "uvicorn-0.32.0-py3-none-any.whl", hash = "sha256:60b8f3a5ac027dcd31448f411ced12b5ef452c646f76f02f8cc3f25d8d26fd82"},
+    {file = "uvicorn-0.32.0.tar.gz", hash = "sha256:f78b36b143c16f54ccdb8190d0a26b5f1901fe5a3c777e1ab29f26391af8551e"},
 ]
 
 [package.dependencies]
@@ -1008,4 +1008,4 @@ reference = "MirrorZ"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "00247d46ee0c52685a7e51cb219b99dbcc468d6431caa30ad43ea71248a6af8e"
+content-hash = "690e71e7f277d7fbf7088b3542b6a90c53301837635c23130c616b4f004c72c3"
