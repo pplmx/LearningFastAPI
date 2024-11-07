@@ -1,4 +1,3 @@
-version: Compose specification
 services:
     fastapi:
         image: pplmx/fastapi_sample
