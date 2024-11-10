@@ -1,51 +1,49 @@
-FROM python:3.12-bookworm AS builder
+# Builder stage
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm AS builder
 
 LABEL maintainer="Mystic"
 
-ENV PIP_NO_CACHE_DIR 1
-ENV PIP_INDEX_URL https://mirrors.cernet.edu.cn/pypi/web/simple
-# poetry will be installed in $HOME/.local/bin
-# NOT WORK, call PATH in RUN command directly, like this: RUN PATH="${HOME}/.local/bin:${PATH}" poetry install --no-directory
-# ENV PATH "$HOME/.local/bin:$PATH"
+# Set build-time variables
+ARG UV_INDEX_URL="https://mirrors.cernet.edu.cn/pypi/web/simple"
+ARG PIP_INDEX_URL="https://mirrors.cernet.edu.cn/pypi/web/simple"
 
 WORKDIR /app
-
-# Use curl to download and install poetry, avoid executing scripts from a pipe for increased security
-RUN curl -sSL https://install.python-poetry.org -o get-poetry.py && python get-poetry.py && rm -fr get-poetry.py
 
 COPY pyproject.toml .
-RUN python -m venv --copies venv
-RUN . venv/bin/activate && \
-    python -m ensurepip -U && \
-    PATH="${HOME}/.local/bin:${PATH}" poetry install --no-directory
 
+# Install dependencies
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --extra prod
 
-FROM python:3.12-slim-bookworm
+# Runtime stage
+FROM python:3.13-slim-bookworm
 
-## Create a group and user
-## RUN groupadd -g 999 appgroup && useradd -r -u 999 -g appgroup appuser
-#RUN groupadd appgroup && useradd -r -g appgroup appuser
-#
-## Tell docker that all future commands should run as the appuser user
-#USER appuser
+# Add non-root user
+RUN groupadd -r app && useradd -r -g app app
 
 WORKDIR /app
-COPY --from=builder /app/venv /app/venv
 
-ENV TZ Asia/Shanghai
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-ENV PATH /app/venv/bin:$PATH
+# Copy virtual environment from builder
+COPY --from=builder --chown=app:app /app/.venv /app/.venv
 
-COPY src/app /app
-COPY gunicorn.conf.py /app
+# Set environment variables
+ENV TZ="Asia/Shanghai" \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/app/.venv/bin:$PATH"
 
-EXPOSE 8080
+# Copy application code
+COPY --chown=app:app /src/app /app
+COPY --chown=app:app gunicorn.conf.py /app
 
-# healthcheck with python urllib
-# HEALTHCHECK --interval=5s --timeout=3s --retries=3 CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8080').getcode()"
+# Switch to non-root user
+USER app
 
-# or healthcheck with /dev/tcp
-HEALTHCHECK --interval=5s --timeout=3s --retries=3 CMD bash -c 'cat < /dev/null > /dev/tcp/127.0.0.1/8080'
+# Expose port
+EXPOSE 8000
 
+# Healthcheck
+HEALTHCHECK --start-period=30s CMD python -c "import requests; requests.get('http://localhost:8000', timeout=2)"
+
+# Start application
 CMD ["gunicorn", "main:app"]

@@ -5,6 +5,19 @@ IMAGE_NAME="pplmx/fastapi_sample"
 COMPOSE_SERVICE_NAME="demo"
 K8S_APP="k8s/app.yml"
 
+# Init the venv
+init: sync
+	@uvx pre-commit install --hook-type commit-msg --hook-type pre-push
+
+# Sync the project with the venv
+sync:
+	@uv sync
+
+# Ruff
+ruff:
+	@uvx ruff format .
+	@uvx ruff check . --fix
+
 # Build image
 image:
 	@docker image build -t ${IMAGE_NAME} .
@@ -33,28 +46,6 @@ dev: image restart
 
 # Run prod server
 prod: image uk k
-
-# format and lint
-ruff:
-	@ruff format src tests
-	@ruff check --fix src tests
-
-# list packages with tree
-lt:
-	@poetry show -t
-
-# list latest packages
-ll:
-	@poetry show -l
-
-# Test app
-test:
-	@poetry run pytest
-
-# Export requirements
-export:
-	@poetry lock --no-update
-	@poetry export -f requirements.txt --output requirements.txt --without-hashes
 
 # Clean up
 clean:
