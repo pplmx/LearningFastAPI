@@ -7,13 +7,13 @@ metadata:
 spec:
     capacity:
         storage: 10Gi  # 存储容量大小
+    volumeMode: Filesystem  # 使用文件系统模式, 还可以是Block模式
     accessModes:
         - ReadWriteOnce  # 访问模式：单个节点可以读写
     persistentVolumeReclaimPolicy: Retain  # 当 PVC 被删除时，保留 PV 及其数据
     storageClassName: standard  # 存储类名称，用于与 PVC 匹配
     hostPath: # 使用主机路径作为存储位置（仅用于开发/测试）
         path: "/mnt/data"
-        type: DirectoryOrCreate  # 如果目录不存在则创建
 
 ---
 # PersistentVolumeClaim (PVC) 是对 PV 的申请
@@ -51,23 +51,17 @@ spec:
             containers: # 容器配置
                 -   name: fastapi-sample  # 容器名称
                     image: pplmx/fastapi_sample  # 容器镜像
-                    resources: # 资源限制和请求
-                        requests: # 容器需要的最小资源
-                            cpu: "200m"    # 0.2 个 CPU 核心
-                            memory: "256Mi"  # 256 MB 内存
-                        limits: # 容器能使用的最大资源
-                            cpu: "500m"    # 0.5 个 CPU 核心
-                            memory: "512Mi"  # 512 MB 内存
                     ports:
                         -   containerPort: 8080  # 容器暴露的端口
+                    imagePullPolicy: IfNotPresent  # 如果镜像已经存在, 就不需要总是拉取
                     livenessProbe: # 存活检查：用于判断容器是否正常运行
                         httpGet:
-                            path: /livez  # 健康检查接口
+                            path: /livez # 健康检查接口
                             port: 8080
                         initialDelaySeconds: 30  # 容器启动后延迟多少秒开始检查
                     readinessProbe: # 就绪检查：用于判断容器是否能够接收请求
                         httpGet:
-                            path: /ready  # 就绪检查接口
+                            path: /ready # 就绪检查接口
                             port: 8080
                         initialDelaySeconds: 20  # 容器启动后延迟多少秒开始检查
                     volumeMounts: # 卷挂载配置
@@ -77,6 +71,11 @@ spec:
                 -   name: data-volume  # 与上面的卷名称对应
                     persistentVolumeClaim:
                         claimName: fastapi-sample-pvc  # 使用的 PVC 名称
+    strategy: # 添加更新策略
+        type: RollingUpdate
+        rollingUpdate:
+            maxUnavailable: 1
+            maxSurge: 1
 
 ---
 # Service 为一组 Pod 提供稳定的网络访问点
@@ -112,3 +111,9 @@ spec:
                 target:
                     type: Utilization
                     averageUtilization: 85  # 当 CPU 使用率超过 85% 时触发扩容
+        -   type: Resource
+            resource:
+                name: memory  # 基于 Mem 使用率进行伸缩
+                target:
+                    type: Utilization
+                    averageUtilization: 85 # 当 Mem 使用率超过 85% 时触发扩容
