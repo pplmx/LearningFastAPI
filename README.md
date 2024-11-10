@@ -3,75 +3,104 @@
 ## Prerequisites
 
 - Python 3.13+
-- uv (Python package installer)
-- Docker (optional)
-- Kubernetes cluster (optional)
-- Make (for running commands)
+- uv (Modern Python packaging tool)
+- Docker (optional, for containerization)
+- Kubernetes cluster (optional, for production deployment)
+- Make (for automation commands)
 
 ## Development Setup
 
-### Local Development
-
-Pre-requisites:
-
-    ```bash
-    # Create virtual environment
-    make init
-    ```
-
-1. **Using uv directly (Recommended)**
-
-    ```bash
-    uv run src/app/main.py
-    ```
-
-2. **Without uv for booting**
+### Quick Start
 
 ```bash
-    # Activate virtual environment
-    source .venv/bin/activate  # Linux/macOS
-    # .venv/Scripts/activate   # Windows
+# 1. Initialize development environment
+make init
 
-    # Run with different servers
-    cd src/app
-
-    # Option 1: Uvicorn (ASGI)
-    uvicorn main:app --host 0.0.0.0 --port 8080 --reload
-
-    # Option 2: Hypercorn (HTTP/2 Support)
-    uv add hypercorn
-    hypercorn main:app --bind 0.0.0.0:8080 --reload
-
-    # Option 3: Gunicorn (Production)
-    uv add gunicorn
-    gunicorn main:app
+# 2. Start the server (using uv)
+uv run src/app/main.py
 ```
 
-### Docker Development
+### Detailed Setup Options
+
+#### 1. Using uv (Recommended)
 
 ```bash
-# Build and run development environment
+# Direct execution with uv
+uv run src/app/main.py
+```
+
+#### 2. Traditional Setup
+
+```bash
+# Activate virtual environment
+source .venv/bin/activate  # Linux/macOS
+.venv/Scripts/activate     # Windows
+
+# Change to application directory
+cd src/app
+
+# Choose your preferred server:
+
+# A. Uvicorn (Development)
+uvicorn main:app --host 0.0.0.0 --port 8080 --reload
+
+# B. Hypercorn (HTTP/2 Support)
+uv add hypercorn
+hypercorn main:app --bind 0.0.0.0:8080 --reload
+
+# C. Gunicorn (Production)
+uv add gunicorn
+gunicorn main:app
+```
+
+### Container Deployment
+
+#### Docker
+
+```bash
+# Development environment
 make dev
 
 ```
 
-### Kubernetes Deployment
+#### Kubernetes
 
 ```bash
-# Deploy to production
+# Production deployment
 make prod
 
 ```
 
 ## API Documentation
 
-Access the interactive API documentation:
-- Swagger UI: http://localhost:8080/docs
-- ReDoc: http://localhost:8080/redoc
+Interactive API documentation is available at:
 
-## Performance Optimization
+- 📚 Swagger UI: http://localhost:8080/docs
+- 📖 ReDoc: http://localhost:8080/redoc
 
-Server configuration recommendations:
-- `Uvicorn`: Best for development and small to medium loads
-- `Hypercorn`: Preferred when `HTTP/2` is required
-- `Gunicorn`: Recommended for `production` with multiple workers
+## Server Configurations
+
+Choose the appropriate server based on your needs:
+
+| Server    | Best For              | Key Features                  |
+|-----------|-----------------------|-------------------------------|
+| Uvicorn   | Development           | Fast reload, Easy debugging   |
+| Hypercorn | HTTP/2 Requirements   | HTTP/2, WebSocket support     |
+| Gunicorn  | Production Deployment | Process management, Stability |
+
+### Production Configuration Example
+
+```python title="gunicorn.conf.py"
+import multiprocessing
+
+bind = "0.0.0.0:8080"
+worker_class = "uvicorn.workers.UvicornWorker"
+
+workers = multiprocessing.cpu_count() * 2 + 1
+threads = multiprocessing.cpu_count() * 2
+
+```
+
+```bash
+gunicorn main:app
+```
