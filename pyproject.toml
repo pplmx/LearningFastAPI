@@ -17,6 +17,7 @@ dependencies = [
     "sqlmodel>=0.0.22",
     "python-jose[cryptography]>=3.3.0",
     "passlib[bcrypt]>=1.7.4",
+    "uvicorn[standard]>=0.32.0",
 ]
 
 [project.optional-dependencies]
@@ -28,7 +29,6 @@ dev = [
 
 prod = [
     "gunicorn>=23.0.0",
-    "uvicorn[standard]>=0.32.0",
 ]
 
 [tool.pytest.ini_options]

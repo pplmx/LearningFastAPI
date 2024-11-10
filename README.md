@@ -1,35 +1,77 @@
-# FastAPI Demo
+# FastAPI Project Documentation
 
-## STARTER
+## Prerequisites
+
+- Python 3.13+
+- uv (Python package installer)
+- Docker (optional)
+- Kubernetes cluster (optional)
+- Make (for running commands)
+
+## Development Setup
+
+### Local Development
+
+Pre-requisites:
+
+    ```bash
+    # Create virtual environment
+    make init
+    ```
+
+1. **Using uv directly (Recommended)**
+
+    ```bash
+    uv run src/app/main.py
+    ```
+
+2. **Without uv for booting**
 
 ```bash
-# main.py
-python main.py
+    # Activate virtual environment
+    source .venv/bin/activate  # Linux/macOS
+    # .venv/Scripts/activate   # Windows
 
-# uvicorn
-uvicorn main:app --host 0.0.0.0 --port 8080
+    # Run with different servers
+    cd src/app
 
-# hypercorn for http/2
-hypercorn main:app --bind 0.0.0.0:8080
+    # Option 1: Uvicorn (ASGI)
+    uvicorn main:app --host 0.0.0.0 --port 8080 --reload
 
-# gunicorn
-gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker
+    # Option 2: Hypercorn (HTTP/2 Support)
+    uv add hypercorn
+    hypercorn main:app --bind 0.0.0.0:8080 --reload
+
+    # Option 3: Gunicorn (Production)
+    uv add gunicorn
+    gunicorn main:app
 ```
 
-### docker
+### Docker Development
 
-```shell
+```bash
+# Build and run development environment
 make dev
+
 ```
 
-### k8s
+### Kubernetes Deployment
 
-```shell
+```bash
+# Deploy to production
 make prod
+
 ```
 
-## ACCESS
+## API Documentation
 
-<http://localhost:8080>
+Access the interactive API documentation:
+- Swagger UI: http://localhost:8080/docs
+- ReDoc: http://localhost:8080/redoc
 
-<http://localhost:8080/docs>
+## Performance Optimization
+
+Server configuration recommendations:
+- `Uvicorn`: Best for development and small to medium loads
+- `Hypercorn`: Preferred when `HTTP/2` is required
+- `Gunicorn`: Recommended for `production` with multiple workers

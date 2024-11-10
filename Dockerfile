@@ -34,7 +34,6 @@ ENV TZ="Asia/Shanghai" \
 
 # Copy application code
 COPY --chown=app:app /src/app /app
-COPY --chown=app:app gunicorn.conf.py /app
 
 # Switch to non-root user
 USER app
