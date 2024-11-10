@@ -1,110 +1,114 @@
+# PersistentVolume (PV) 定义了一块存储空间
+# 它是集群级别的资源，可以被 PVC 申请使用
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-    name: fastapi-sample-pv  # PersistentVolume的名称
+    name: fastapi-sample-pv  # PV 的名称
 spec:
     capacity:
-        storage: 10Gi  # 定义存储容量, 这里是10GiB
-    volumeMode: Filesystem  # 使用文件系统模式, 还可以是Block模式
+        storage: 10Gi  # 存储容量大小
     accessModes:
-        - ReadWriteOnce  # 定义访问模式, 表示可以被单个节点读写
-    persistentVolumeReclaimPolicy: Retain  # 定义回收策略, Retain表示在PVC被删除后保留PV
-    storageClassName: standard  # 定义存储类, PVC会选择相同存储类的PV
-    hostPath:  # 在节点上定义存储路径
+        - ReadWriteOnce  # 访问模式：单个节点可以读写
+    persistentVolumeReclaimPolicy: Retain  # 当 PVC 被删除时，保留 PV 及其数据
+    storageClassName: standard  # 存储类名称，用于与 PVC 匹配
+    hostPath: # 使用主机路径作为存储位置（仅用于开发/测试）
         path: "/mnt/data"
+        type: DirectoryOrCreate  # 如果目录不存在则创建
 
 ---
+# PersistentVolumeClaim (PVC) 是对 PV 的申请
+# 它是命名空间级别的资源，Pod 通过 PVC 来使用存储
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-    name: fastapi-sample-pvc  # PersistentVolumeClaim的名称
+    name: fastapi-sample-pvc  # PVC 的名称
 spec:
     accessModes:
-        - ReadWriteOnce  # 必须与PersistentVolume的访问模式匹配
-    storageClassName: standard  # 必须与PersistentVolume的存储类匹配
+        - ReadWriteOnce  # 访问模式必须与 PV 匹配
+    storageClassName: standard  # 存储类名称必须与 PV 匹配
     resources:
         requests:
-            storage: 10Gi  # 必须小于或等于PersistentVolume的存储容量
+            storage: 10Gi  # 申请的存储大小
 
 ---
+# Deployment 定义了如何部署和管理一组 Pod
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: fastapi-sample  # 部署的名称
+    name: fastapi-sample  # Deployment 名称
     labels:
-        app: fastapi-sample  # 标签, 用于选择器
+        app: fastapi-sample  # 用于标识此应用的标签
 spec:
-    replicas: 3  # 副本数量,增加副本数量以提高可用性
+    replicas: 3  # Pod 副本数量
     selector:
-        matchLabels:
-            app: fastapi-sample  # 选择器, 用于匹配Pod
-    template:
+        matchLabels: # 选择器，用于确定哪些 Pod 属于此 Deployment
+            app: fastapi-sample
+    template: # Pod 模板，定义了 Pod 的配置
         metadata:
             labels:
-                app: fastapi-sample  # Pod的标签
+                app: fastapi-sample  # Pod 标签，必须匹配上面的选择器
         spec:
-            containers:
+            containers: # 容器配置
                 -   name: fastapi-sample  # 容器名称
                     image: pplmx/fastapi_sample  # 容器镜像
+                    resources: # 资源限制和请求
+                        requests: # 容器需要的最小资源
+                            cpu: "200m"    # 0.2 个 CPU 核心
+                            memory: "256Mi"  # 256 MB 内存
+                        limits: # 容器能使用的最大资源
+                            cpu: "500m"    # 0.5 个 CPU 核心
+                            memory: "512Mi"  # 512 MB 内存
                     ports:
-                        -   containerPort: 8080  # 容器端口
-                    imagePullPolicy: IfNotPresent  # 如果镜像已经存在, 就不需要总是拉取
-                    livenessProbe: # liveness探针, 用于检查容器是否还在运行
+                        -   containerPort: 8080  # 容器暴露的端口
+                    livenessProbe: # 存活检查：用于判断容器是否正常运行
                         httpGet:
-                            path: /livez # 服务提供的健康检查接口
+                            path: /livez  # 健康检查接口
                             port: 8080
-                    readinessProbe: # readiness探针, 用于检查容器是否准备好处理请求
+                        initialDelaySeconds: 30  # 容器启动后延迟多少秒开始检查
+                    readinessProbe: # 就绪检查：用于判断容器是否能够接收请求
                         httpGet:
-                            path: /ready # 服务提供的准备就绪接口
+                            path: /ready  # 就绪检查接口
                             port: 8080
-                    volumeMounts:  # 挂载卷到容器中的路径上
-                        - name: data-volume
-                          mountPath: /data
-            volumes:   # 在Pod级别定义卷,可以被Pod中的所有容器使用
-                - name: data-volume
-                  persistentVolumeClaim:
-                      claimName: fastapi-sample-pvc
-    strategy: # 添加更新策略
-        type: RollingUpdate
-        rollingUpdate:
-            maxUnavailable: 1
-            maxSurge: 1
+                        initialDelaySeconds: 20  # 容器启动后延迟多少秒开始检查
+                    volumeMounts: # 卷挂载配置
+                        -   name: data-volume  # 卷名称
+                            mountPath: /data   # 挂载到容器的路径
+            volumes: # Pod 级别的卷定义
+                -   name: data-volume  # 与上面的卷名称对应
+                    persistentVolumeClaim:
+                        claimName: fastapi-sample-pvc  # 使用的 PVC 名称
 
 ---
+# Service 为一组 Pod 提供稳定的网络访问点
 apiVersion: v1
 kind: Service
 metadata:
-    name: fastapi-sample-svc  # 服务名称
+    name: fastapi-sample-svc  # Service 名称
 spec:
     selector:
-        app: fastapi-sample  # 选择器, 用于匹配Pod
+        app: fastapi-sample  # 选择具有此标签的 Pod
     ports:
-        -   port: 18888  # 服务端口
-            targetPort: 8080  # 目标端口, 即Pod的端口
-    type: LoadBalancer  # 类型为LoadBalancer, 会自动创建云提供商的负载均衡器
+        -   port: 18888       # Service 暴露的端口
+            targetPort: 8080  # Pod 的目标端口
+    type: LoadBalancer    # Service 类型：负载均衡器
 
 ---
-apiVersion: autoscaling/v2  # 添加自动缩放以处理负载变化
+# HorizontalPodAutoscaler (HPA) 用于自动伸缩 Pod 数量
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-    name: fastapi-sample-hpa  # 自动缩放器的名称
+    name: fastapi-sample-hpa  # HPA 名称
 spec:
-    scaleTargetRef:
+    scaleTargetRef: # 伸缩目标
         apiVersion: apps/v1
         kind: Deployment
-        name: fastapi-sample  # 需要缩放的目标, 即上面定义的Deployment
-    minReplicas: 3  # 最小副本数量
-    maxReplicas: 10  # 最大副本数量, 根据需要, 可以增加最大副本数
-    metrics:
+        name: fastapi-sample  # 目标 Deployment 名称
+    minReplicas: 3    # 最小 Pod 数量
+    maxReplicas: 10   # 最大 Pod 数量
+    metrics: # 伸缩指标
         -   type: Resource
             resource:
-                name: cpu
+                name: cpu  # 基于 CPU 使用率进行伸缩
                 target:
                     type: Utilization
-                    averageUtilization: 85  # CPU利用率超过85%时, 自动扩容
-        -   type: Resource
-            resource:
-                name: memory
-                target:
-                    type: Utilization
-                    averageUtilization: 85 # 内存使用率超过85%时, 自动扩容
+                    averageUtilization: 85  # 当 CPU 使用率超过 85% 时触发扩容
