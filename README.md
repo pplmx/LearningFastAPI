@@ -17,19 +17,15 @@
 make init
 
 # 2. Start the server (using uv)
-uv run src/app/main.py
+uv run -- fastapi dev src/app/main.py
+
+# or fastapi run
+uv run -- fastapi run --workers 4 src/app/main.py
 ```
 
 ### Detailed Setup Options
 
-#### 1. Using uv (Recommended)
-
-```bash
-# Direct execution with uv
-uv run src/app/main.py
-```
-
-#### 2. Traditional Setup
+#### Setup in another way
 
 ```bash
 # Activate virtual environment
@@ -41,16 +37,13 @@ cd src/app
 
 # Choose your preferred server:
 
-# A. Uvicorn (Development)
-uvicorn main:app --host 0.0.0.0 --port 8080 --reload
+# A. Uvicorn
+uvicorn main:app --host 0.0.0.0 --port 8080
 
 # B. Hypercorn (HTTP/2 Support)
 uv add hypercorn
-hypercorn main:app --bind 0.0.0.0:8080 --reload
+hypercorn main:app --bind 0.0.0.0:8080
 
-# C. Gunicorn (Production)
-uv add gunicorn
-gunicorn main:app
 ```
 
 ### Container Deployment

@@ -3,7 +3,7 @@ services:
         image: pplmx/fastapi_sample
         restart: always
         ports:
-            - 8080:8080
+            - "8000:8000"
         networks:
             - traefik-net
 
